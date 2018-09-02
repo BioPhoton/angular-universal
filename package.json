@@ -14,7 +14,8 @@
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
     "generate:prerender": "node dist/prerender",
     "build:prerender": "npm run build:client-and-server-bundles && npm run compile:server && npm run generate:prerender",
-    "serve:prerender": "http-server dist/angular-universal"
+    "serve:prerender": "http-server dist/angular-universal",
+    "build:ssr-and-prerender": "npm run build:ssr && npm run generate:prerender"
   },
   "private": true,
   "dependencies": {

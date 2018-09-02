@@ -9,6 +9,8 @@ import {provideModuleMap} from '@nguniversal/module-map-ngfactory-loader';
 import * as express from 'express';
 import {join} from 'path';
 
+import {STATIC_ROUTES} from './src/app/app.routing.module';
+
 // Faster server renders w/ Prod mode (dev mode never needed)
 enableProdMode();
 
@@ -39,8 +41,17 @@ app.get('*.*', express.static(join(DIST_FOLDER, 'angular-universal'), {
   maxAge: '1y'
 }));
 
+// All regular routes use prerendered content
+STATIC_ROUTES.forEach(route => {
+  app.get(route, (req, res) => {
+    // console.log('prerendered');
+    res.sendFile(join(DIST_FOLDER, 'angular-universal', 'prerendered', route, 'index.html'));
+   });
+});
+
 // All regular routes use the Universal engine
 app.get('*', (req, res) => {
+  // console.log('ssr');
   res.render('index', { req });
 });
 

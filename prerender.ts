@@ -25,7 +25,7 @@ let previousRender = Promise.resolve();
 
 // Iterate each route path
 STATIC_ROUTES.forEach(route => {
-  const fullPath = join(BROWSER_FOLDER, route);
+  const fullPath = join(BROWSER_FOLDER, 'prerendered', route);
 
   // Make sure the directory structure is there
   if (!existsSync(fullPath)) {
