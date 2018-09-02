@@ -28,6 +28,13 @@ const routes: Routes = [
   }
 ];
 
+export const STATIC_ROUTES: string[] = [
+  '/',
+  '/home',
+  '/talks-overview',
+  '/error404'
+];
+
 @NgModule({
   imports: [
     SpeakerOverviewModule,

@@ -8,10 +8,13 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "compile:server": "tsc -p server.tsconfig.json",
+    "build:client-and-server-bundles": "ng build --prod && ng run angular-universal:server:production",
     "serve:ssr": "node dist/server",
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
-    "build:client-and-server-bundles": "ng build --prod --aot && ng run angular-universal:server:production",
-    "compile:server": "tsc -p server.tsconfig.json"
+    "generate:prerender": "node dist/prerender",
+    "build:prerender": "npm run build:client-and-server-bundles && npm run compile:server && npm run generate:prerender",
+    "serve:prerender": "http-server dist/angular-universal"
   },
   "private": true,
   "dependencies": {
