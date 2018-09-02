@@ -10,9 +10,11 @@ import { CoreModule } from './core/core.module';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    CoreModule
+    CoreModule.forClient()
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+}
