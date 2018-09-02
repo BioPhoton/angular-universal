@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {Observable} from 'rxjs/index';
+import {AppStateService} from '../../../core/services/app-state.service';
 
 @Component({
   selector: 'app-speaker-list',
@@ -7,7 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SpeakerListComponent implements OnInit {
 
-  constructor() { }
+  talk$: Observable<any> = this.aS.getFlightById('1');
+  constructor(private aS: AppStateService) { }
 
   ngOnInit() {
   }

@@ -3,10 +3,12 @@ import {ModuleWithProviders, NgModule} from '@angular/core';
 import {AppStateClientService} from './services/app-state.client.service';
 import {AppStateService} from './services/app-state.service';
 import {AppStateServerService} from './services/app-state.server.service';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    HttpClientModule
   ],
   declarations: []
 })
