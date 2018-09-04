@@ -10,6 +10,7 @@ import {AppStateService} from '../../../core/services/app-state.service';
 export class SpeakerListComponent implements OnInit {
 
   talk$: Observable<any> = this.aS.getFlightById('1');
+
   constructor(private aS: AppStateService) { }
 
   ngOnInit() {

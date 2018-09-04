@@ -1,5 +1,3 @@
-import 'zone.js/dist/zone-node';
-import 'reflect-metadata';
 import {enableProdMode} from '@angular/core';
 // Express Engine
 import {ngExpressEngine} from '@nguniversal/express-engine';
@@ -8,8 +6,10 @@ import {provideModuleMap} from '@nguniversal/module-map-ngfactory-loader';
 
 import * as express from 'express';
 import {join} from 'path';
+import 'reflect-metadata';
+import 'zone.js/dist/zone-node';
 
-import {STATIC_ROUTES} from './src/app/app.routing.module';
+import {STATIC_ROUTES} from './src/app/app-routing.module';
 
 // Faster server renders w/ Prod mode (dev mode never needed)
 enableProdMode();
@@ -44,15 +44,14 @@ app.get('*.*', express.static(join(DIST_FOLDER, 'angular-universal'), {
 // All regular routes use prerendered content
 STATIC_ROUTES.forEach(route => {
   app.get(route, (req, res) => {
-    // console.log('prerendered');
-    res.sendFile(join(DIST_FOLDER, 'angular-universal', 'prerendered', route, 'index.html'));
-   });
+    const file = route !== '/' ? route.split('').slice(1).join('') + '.html' : 'index.html';
+    res.sendFile(join(DIST_FOLDER, 'angular-universal', file));
+  });
 });
 
 // All regular routes use the Universal engine
 app.get('*', (req, res) => {
-  // console.log('ssr');
-  res.render('index', { req });
+  res.render('index', {req});
 });
 
 // Start up the Node server

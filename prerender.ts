@@ -7,7 +7,16 @@ import {join} from 'path';
 import 'reflect-metadata';
 // Load zone.js for the server.
 import 'zone.js/dist/zone-node';
-import {STATIC_ROUTES} from './src/app/app.routing.module';
+import {CriticalCssOptions, injectCriticalCss} from './inject-critical-css';
+import {STATIC_ROUTES} from './src/app/app-routing.module';
+
+
+interface Params {
+  fullPath: string;
+  route: string;
+  html?: string;
+  filename?: string;
+}
 // Faster server renders w/ Prod mode (dev mode never needed)
 enableProdMode();
 
@@ -21,23 +30,51 @@ const BROWSER_FOLDER = join(process.cwd(), join('dist', 'angular-universal'));
 // Load the index.html file containing references to your application bundle.
 const index = readFileSync(join(BROWSER_FOLDER, 'index.html'), 'utf8');
 
-let previousRender = Promise.resolve();
+const getFilename = (route: string): string => {
+  if (route !== '/') {
+    return route.split('').slice(1).join('') + '.html';
+  }
+  return 'index.html';
+};
 
 // Iterate each route path
 STATIC_ROUTES.forEach(route => {
-  const fullPath = join(BROWSER_FOLDER, 'prerendered', route);
+  const fullPath = join(BROWSER_FOLDER);
 
   // Make sure the directory structure is there
   if (!existsSync(fullPath)) {
     mkdirSync(fullPath);
   }
+  const resolvedParams = Promise.resolve<Params>({fullPath, route});
 
   // Writes rendered HTML to index.html, replacing the file if it already exists.
-  previousRender = previousRender.then(_ => renderModuleFactory(AppServerModuleNgFactory, {
-    document: index,
-    url: route,
-    extraProviders: [
-      provideModuleMap(LAZY_MODULE_MAP)
-    ]
-  })).then(html => writeFileSync(join(fullPath, 'index.html'), html));
+  resolvedParams
+    .then((p) =>
+      renderModuleFactory(AppServerModuleNgFactory, {
+        document: index,
+        url: p.route,
+        extraProviders: [
+          provideModuleMap(LAZY_MODULE_MAP)
+        ]
+      }).then((html) => ({html, ...p}))
+    )
+    .then((p: Params) => {
+      const filename = getFilename(p.route);
+      writeFileSync(join(p.fullPath, filename), p.html);
+      return {...p, filename};
+    })
+    .then((p: Params) => {
+      const opt: CriticalCssOptions = {
+        inline: true,
+        base: p.fullPath,
+        src: join(p.fullPath, p.filename),
+        dest: p.filename,
+        width: 1300,
+        height: 900
+      };
+      return injectCriticalCss(opt);
+    })
+    .catch(e => console.log(e))
+  ;
 });
+
