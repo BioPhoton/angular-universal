@@ -47,7 +47,7 @@ STATIC_ROUTES.forEach(route => {
   }
   const resolvedParams = Promise.resolve<Params>({fullPath, route});
 
-  // Writes rendered HTML to index.html, replacing the file if it already exists.
+  // Rendered angular app.
   resolvedParams
     .then((p) =>
       renderModuleFactory(AppServerModuleNgFactory, {
@@ -58,11 +58,13 @@ STATIC_ROUTES.forEach(route => {
         ]
       }).then((html) => ({html, ...p}))
     )
+    // Writes rendered HTML to [name].html, replacing the file if it already exists.
     .then((p: Params) => {
       const filename = getFilename(p.route);
       writeFileSync(join(p.fullPath, filename), p.html);
       return {...p, filename};
     })
+    // Inject critical css
     .then((p: Params) => {
       const opt: CriticalCssOptions = {
         inline: true,
