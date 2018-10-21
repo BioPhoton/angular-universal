@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
 import {AppStateService} from './core/services/app-state.service';
 
 @Component({
@@ -9,7 +10,18 @@ import {AppStateService} from './core/services/app-state.service';
 export class AppComponent {
   title = 'angular-universal';
 
-  constructor(private aS: AppStateService) {
+  constructor(
+    private aS: AppStateService,
+    private translateService: TranslateService
+  ) {
     this.title = this.aS.title;
+
+    this.translateService.setDefaultLang('en');
+    this.translateService.use('de');
   }
+
+  setLang(lang: string): void {
+    this.translateService.use(lang);
+  }
+
 }
