@@ -1,16 +1,15 @@
+import {HttpClient} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import {RouterModule} from '@angular/router';
+import {ROUTES} from './app-routing';
 
 import {AppComponent} from './app.component';
-import {AppRouterModule} from './app-routing.module';
-import {Error404Component} from './components/error404/error404.component';
-import {HomeComponent} from './components/home/home.component';
 import {CoreModule} from './core/core.module';
+import {SpeakerOverviewModule} from './features/speaker-overview/speaker-overview.module';
 
-export const DECLARATIONS = [
-  HomeComponent,
-  Error404Component
-];
+
+export const DECLARATIONS = [];
 
 @NgModule({
   declarations: [
@@ -20,7 +19,8 @@ export const DECLARATIONS = [
   imports: [
     BrowserModule.withServerTransition({appId: 'serverApp'}),
     CoreModule.forClient(),
-    AppRouterModule
+    SpeakerOverviewModule,
+    RouterModule.forRoot(ROUTES, {})
   ],
   providers: [],
   bootstrap: [AppComponent]

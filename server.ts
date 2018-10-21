@@ -9,7 +9,7 @@ import {join} from 'path';
 import 'reflect-metadata';
 import 'zone.js/dist/zone-node';
 
-import {STATIC_ROUTES} from './src/app/app-routing.module';
+import {STATIC_ROUTES_FOR_PRERENDER} from './src/app/app-routing';
 
 // Faster server renders w/ Prod mode (dev mode never needed)
 enableProdMode();
@@ -42,7 +42,7 @@ app.get('*.*', express.static(join(DIST_FOLDER, 'angular-universal'), {
 }));
 
 // All regular routes use prerendered content
-STATIC_ROUTES.forEach(route => {
+STATIC_ROUTES_FOR_PRERENDER.forEach(route => {
   app.get(route, (req, res) => {
     const file = route !== '/' ? route.split('').slice(1).join('') + '.html' : 'index.html';
     res.sendFile(join(DIST_FOLDER, 'angular-universal', file));

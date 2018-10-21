@@ -1,10 +1,9 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {Error404Component} from './components/error404/error404.component';
-import {HomeComponent} from './components/home/home.component';
+import {Routes} from '@angular/router';
+import {Error404Component} from './core/components/error404/error404.component';
+import {HomeComponent} from './core/components/home/home.component';
 import {SpeakerOverviewModule} from './features/speaker-overview/speaker-overview.module';
 
-const routes: Routes = [
+export const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
@@ -28,19 +27,9 @@ const routes: Routes = [
   }
 ];
 
-export const STATIC_ROUTES: string[] = [
+export const STATIC_ROUTES_FOR_PRERENDER: string[] = [
   '/home',
   '/talks-overview',
   '/error404'
 ];
 
-@NgModule({
-  imports: [
-    SpeakerOverviewModule,
-    RouterModule.forRoot(routes, {})
-  ],
-  exports: [RouterModule]
-})
-export class AppRouterModule {
-
-}

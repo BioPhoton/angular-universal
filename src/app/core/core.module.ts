@@ -4,13 +4,21 @@ import {AppStateClientService} from './services/app-state.client.service';
 import {AppStateService} from './services/app-state.service';
 import {AppStateServerService} from './services/app-state.server.service';
 import {HttpClientModule} from '@angular/common/http';
+import {Error404Component} from './components/error404/error404.component';
+import {HomeComponent} from './components/home/home.component';
+export const DECLARATIONS = [
+  HomeComponent,
+  Error404Component
+];
 
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule
   ],
-  declarations: []
+  declarations: [
+    DECLARATIONS
+  ]
 })
 export class CoreModule {
   static forServer(): ModuleWithProviders {
