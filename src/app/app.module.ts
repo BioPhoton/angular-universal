@@ -1,18 +1,14 @@
-import {HttpClient} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {ROUTES} from './app-routing';
 
 import {AppComponent} from './app.component';
 import {CoreModule} from './core/core.module';
 import {SpeakerOverviewModule} from './features/speaker-overview/speaker-overview.module';
+import {TranslationManagerModule} from './modules/translation-manager/translation-manager.module';
+import {LayoutModule} from './modules/layout/layout.module';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 export const DECLARATIONS = [];
 
@@ -22,17 +18,15 @@ export const DECLARATIONS = [];
     DECLARATIONS
   ],
   imports: [
+    // Internal
     BrowserModule.withServerTransition({appId: 'serverApp'}),
     CoreModule.forClient(),
-    SpeakerOverviewModule,
     RouterModule.forRoot(ROUTES, {}),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
+    // Modules
+    TranslationManagerModule,
+    LayoutModule,
+    // Features
+    SpeakerOverviewModule
   ],
   providers: [],
   bootstrap: [AppComponent]

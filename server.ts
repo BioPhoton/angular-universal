@@ -9,7 +9,10 @@ import {join} from 'path';
 import 'reflect-metadata';
 import 'zone.js/dist/zone-node';
 
-import {STATIC_ROUTES_FOR_PRERENDER} from './src/app/app-routing';
+// Consts
+const DIST_FOLDER = join(process.cwd(), 'dist');
+const APP_FOLDER = join(DIST_FOLDER, 'angular-universal');
+
 
 // Faster server renders w/ Prod mode (dev mode never needed)
 enableProdMode();
@@ -18,8 +21,6 @@ enableProdMode();
 const app = express();
 
 const PORT = process.env.PORT || 4000;
-const DIST_FOLDER = join(process.cwd(), 'dist');
-
 // * NOTE :: leave this as require() since this file is built Dynamically from webpack
 const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./angular-universal-server/main');
 
@@ -32,18 +33,21 @@ app.engine('html', ngExpressEngine({
 }));
 
 app.set('view engine', 'html');
-app.set('views', join(DIST_FOLDER, 'angular-universal'));
+app.set('views', APP_FOLDER);
 
 // Example Express Rest API endpoints
 // app.get('/api/**', (req, res) => { });
 // Server static files from /browser
-app.get('*.*', express.static(join(DIST_FOLDER, 'angular-universal'), {
+app.get('*.*', (express as any).static(join(DIST_FOLDER, 'angular-universal'), {
   maxAge: '1y'
 }));
 
 // All regular routes use prerendered content
-STATIC_ROUTES_FOR_PRERENDER.forEach(route => {
+// STATIC_ROUTES_FOR_PRERENDER.forEach(route => {
+[].forEach(route => {
   app.get(route, (req, res) => {
+
+
     const file = route !== '/' ? route.split('').slice(1).join('') + '.html' : 'index.html';
     res.sendFile(join(DIST_FOLDER, 'angular-universal', file));
   });
@@ -51,7 +55,11 @@ STATIC_ROUTES_FOR_PRERENDER.forEach(route => {
 
 // All regular routes use the Universal engine
 app.get('*', (req, res) => {
-  res.render('index', {req});
+  global['window'] = {};
+  global['window']['navigator'] = {};
+  global['window']['navigator']['language'] = req['headers']['accept-language'];
+
+  res.render('index', req);
 });
 
 // Start up the Node server

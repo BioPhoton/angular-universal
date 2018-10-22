@@ -8,7 +8,7 @@ import 'reflect-metadata';
 // Load zone.js for the server.
 import 'zone.js/dist/zone-node';
 import {CriticalCssOptions, injectCriticalCss} from './inject-critical-css';
-import {STATIC_ROUTES} from './src/app/app-routing.module';
+import {STATIC_ROUTES_FOR_PRERENDER} from './src/app/app-routing';
 
 
 interface Params {
@@ -38,7 +38,7 @@ const getFilename = (route: string): string => {
 };
 
 // Iterate each route path
-STATIC_ROUTES.forEach(route => {
+STATIC_ROUTES_FOR_PRERENDER.forEach(route => {
   const fullPath = join(BROWSER_FOLDER);
 
   // Make sure the directory structure is there
@@ -51,8 +51,8 @@ STATIC_ROUTES.forEach(route => {
   resolvedParams
     .then((p) =>
       renderModuleFactory(AppServerModuleNgFactory, {
-        document: index,
-        url: p.route,
+        document: index as string,
+        url: p.route as string,
         extraProviders: [
           provideModuleMap(LAZY_MODULE_MAP)
         ]
@@ -76,7 +76,7 @@ STATIC_ROUTES.forEach(route => {
       };
       return injectCriticalCss(opt);
     })
-    .catch(e => console.log(e))
+    .catch(e => console.log('THIS IS AN ERROR', e))
   ;
 });
 
