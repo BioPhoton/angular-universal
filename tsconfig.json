@@ -18,6 +18,14 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@universal-workspace/translation-manager/*": [
+        "projects/translation-manager/src/public_api"
+      ],
+      "@universal-workspace/universal-app/assets/*": [
+        "projects/universal-app/src/assets/*"
+      ]
+    }
   }
 }
