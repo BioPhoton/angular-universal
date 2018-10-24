@@ -68,9 +68,13 @@ export class TranslationManagerModule {
     };
   }
 
+  /**/
   constructor(
     private translateService: TranslateService,
-    private translationManagerService: TranslationManagerService) {
+    private translationManagerService: TranslationManagerService
+  ) {
+    this.translateService.setDefaultLang('en');
+    this.translateService.use('en');
     this.translationManagerService.setDefaultLang(TranslationManagerModule.config.defaultLang);
     this.translationManagerService.switchLang(translateService.getBrowserLang());
   }
