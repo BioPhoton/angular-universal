@@ -8,7 +8,7 @@ import {LayoutComponent} from './layout/layout.component';
   imports: [
     CommonModule,
     RouterModule,
-    TranslationManagerModule.forRoot({defaultLang: 'en', languages: ['en', 'de']})
+    TranslationManagerModule.forFeature()
   ],
   declarations: [LayoutComponent]
 })

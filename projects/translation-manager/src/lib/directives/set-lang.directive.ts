@@ -13,8 +13,9 @@ import {
   RouterEvent,
   UrlTree
 } from '@angular/router';
-import {Subscription} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {TranslationManagerService} from '../services/translation-manager.service';
+import {takeUntil} from 'rxjs/internal/operators';
 
 
 @Directive({
@@ -22,9 +23,10 @@ import {TranslationManagerService} from '../services/translation-manager.service
 })
 export class SetLangDirective implements OnChanges, OnDestroy {
   private commands: any[] = [];
-  private subscription: Subscription;
+  private onDestroySubject: Subject<boolean> = new Subject();
+  private onDestroy$: Observable<boolean> = this.onDestroySubject.asObservable();
 
-  // the url displayed on the anchor element.
+  // the url displayed on the anchor element used for SSR or clients without JS.
   @HostBinding() href: string;
 
   constructor(
@@ -32,7 +34,11 @@ export class SetLangDirective implements OnChanges, OnDestroy {
     private route: ActivatedRoute,
     private translationManagerService: TranslationManagerService
   ) {
-    this.subscription = router.events.subscribe((s: RouterEvent) => {
+    router.events
+      .pipe(
+        takeUntil(this.onDestroy$)
+      )
+      .subscribe((s: RouterEvent) => {
       if (s instanceof NavigationEnd) {
         this.updateTargetUrlAndHref();
       }
@@ -52,16 +58,19 @@ export class SetLangDirective implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): any {
-    this.subscription.unsubscribe();
+    this.onDestroySubject.next(true);
   }
 
   @HostListener('click', ['$event'])
   onClick($event): boolean {
-    // prevent event if js is enables (for client side)
+    // prevent event if js is enabled (for client side)
     $event.stopPropagation();
     $event.preventDefault();
 
-    this.router.navigateByUrl(this.urlTree);
+    this.router.navigateByUrl(this.urlTree)
+      .catch((e) => {
+        console.error('Error in translation service on', e);
+      });
 
     return false;
   }

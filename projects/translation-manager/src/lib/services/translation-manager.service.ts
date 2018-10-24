@@ -2,7 +2,7 @@ import {LocationStrategy} from '@angular/common';
 import {Injectable, OnDestroy} from '@angular/core';
 import {NavigationEnd, Router, RouterEvent, UrlTree} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
-import {TranslationManagerModule} from '@universal-workspace/translation-manager';
+import {TranslationManagerModule} from '../translation-manager.module';
 import {Subject} from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
 
@@ -18,7 +18,6 @@ export class TranslationManagerService implements OnDestroy {
     private translateService: TranslateService
   ) {
 
-    // @TODO why is this not working for route.params?
     this.router.events
       .pipe(
         filter((e: RouterEvent): e is NavigationEnd => e instanceof NavigationEnd),
@@ -32,6 +31,10 @@ export class TranslationManagerService implements OnDestroy {
 
   getDefaultLang(): string {
     return this.translateService.getDefaultLang();
+  }
+
+  setDefaultLang(lang: string): void {
+    this.translateService.setDefaultLang(this.convertToValidLang(lang));
   }
 
   getExternalUrl(urlTree: UrlTree): string {

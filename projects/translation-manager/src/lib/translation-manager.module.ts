@@ -1,7 +1,6 @@
 import {CommonModule, isPlatformServer} from '@angular/common';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {
-  Inject,
   ModuleWithProviders,
   NgModule,
   PLATFORM_ID
@@ -11,7 +10,7 @@ import {
   TranslateModule,
   TranslateService
 } from '@ngx-translate/core';
-import {TranslationManagerService} from '@universal-workspace/translation-manager';
+import {TranslationManagerService} from './services/translation-manager.service';
 import {SetLangDirective} from './directives/set-lang.directive';
 import {TranslationManagerConfig} from './interfaces/translation-manager-config.interface';
 import {translateClientFactory} from './loader/translate-client.loader';
@@ -22,20 +21,25 @@ const createTranslateLoader = (http: HttpClient, plateformId: object) => {
   return isPlatformServer(plateformId) ? translateServerFactory() : translateClientFactory(http);
 };
 
+const DECLARATIONS = [SetLangDirective];
+const EXPORTS = [TranslateModule, ...DECLARATIONS];
+
+const TRANSLATE_MODULE_CONFIG = {
+  loader: {
+    provide: TranslateLoader,
+    useFactory: createTranslateLoader,
+    deps: [HttpClient, PLATFORM_ID]
+  }
+};
+
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient, PLATFORM_ID]
-      }
-    }),
+    TranslateModule.forRoot(TRANSLATE_MODULE_CONFIG)
   ],
-  declarations: [SetLangDirective],
-  exports: [TranslateModule, SetLangDirective]
+  declarations: [DECLARATIONS],
+  exports: [EXPORTS]
 })
 export class TranslationManagerModule {
 
@@ -65,9 +69,10 @@ export class TranslationManagerModule {
   }
 
   constructor(
-    private translateService: TranslateService, @Inject(PLATFORM_ID) private platformId) {
-    this.translateService.setDefaultLang(TranslationManagerModule.config.defaultLang);
-    this.translateService.use(translateService.getBrowserLang());
+    private translateService: TranslateService,
+    private translationManagerService: TranslationManagerService) {
+    this.translationManagerService.setDefaultLang(TranslationManagerModule.config.defaultLang);
+    this.translationManagerService.switchLang(translateService.getBrowserLang());
   }
 
 }
