@@ -1,8 +1,7 @@
 import {CommonModule, isPlatformServer} from '@angular/common';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {
-  ModuleWithProviders,
-  NgModule,
+  Inject, ModuleWithProviders, NgModule,
   PLATFORM_ID
 } from '@angular/core';
 import {
@@ -10,11 +9,12 @@ import {
   TranslateModule,
   TranslateService
 } from '@ngx-translate/core';
-import {TranslationManagerService} from './services/translation-manager.service';
 import {SetLangDirective} from './directives/set-lang.directive';
 import {TranslationManagerConfig} from './interfaces/translation-manager-config.interface';
 import {translateClientFactory} from './loader/translate-client.loader';
 import {translateServerFactory} from './loader/translate-server.loader';
+import {TranslationManagerService} from './services/translation-manager.service';
+import {TRANSLATION_MANAGER_CONFIG_TOKEN} from './tokens/translatio-manager-config.token';
 
 
 const createTranslateLoader = (http: HttpClient, plateformId: object) => {
@@ -49,13 +49,14 @@ export class TranslationManagerModule {
   };
 
   static forRoot(config: TranslationManagerConfig): ModuleWithProviders {
-    if (config) {
-      TranslationManagerModule.config = config;
-    }
 
     return {
       ngModule: TranslationManagerModule,
       providers: [
+        {
+          provide: TRANSLATION_MANAGER_CONFIG_TOKEN,
+          useValue: config
+        },
         TranslationManagerService
       ]
     };
@@ -68,14 +69,12 @@ export class TranslationManagerModule {
     };
   }
 
-  /**/
   constructor(
     private translateService: TranslateService,
-    private translationManagerService: TranslationManagerService
+    private translationManagerService: TranslationManagerService,
+    @Inject(TRANSLATION_MANAGER_CONFIG_TOKEN) private translationManagerConfig
   ) {
-    this.translateService.setDefaultLang('en');
-    this.translateService.use('en');
-    this.translationManagerService.setDefaultLang(TranslationManagerModule.config.defaultLang);
+    this.translationManagerService.setDefaultLang(translationManagerConfig.defaultLang);
     this.translationManagerService.switchLang(translateService.getBrowserLang());
   }
 
