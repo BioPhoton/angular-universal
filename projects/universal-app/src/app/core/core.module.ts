@@ -1,11 +1,11 @@
 import {CommonModule} from '@angular/common';
-import {ModuleWithProviders, NgModule} from '@angular/core';
-import {AppStateClientService} from './services/app-state.client.service';
-import {AppStateService} from './services/app-state.service';
-import {AppStateServerService} from './services/app-state.server.service';
 import {HttpClientModule} from '@angular/common/http';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {Error404Component} from './components/error404/error404.component';
 import {HomeComponent} from './components/home/home.component';
+import {AppStateClientService} from './services/app-state.client.service';
+import {AppStateServerService} from './services/app-state.server.service';
+import {AppStateService} from './services/app-state.service';
 
 export const DECLARATIONS = [
   HomeComponent,

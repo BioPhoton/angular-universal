@@ -1,6 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
-
-import { AppStateClientService } from './app-state.client.service';
+import {inject, TestBed} from '@angular/core/testing';
 
 describe('AppState.ClientService', () => {
   beforeEach(() => {

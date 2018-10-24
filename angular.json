@@ -7,7 +7,7 @@
       "root": "projects/translation-manager",
       "sourceRoot": "projects/translation-manager/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -42,7 +42,7 @@
       "root": "projects/universal-app/",
       "sourceRoot": "projects/universal-app/src",
       "projectType": "application",
-      "prefix": "",
+      "prefix": "app",
       "schematics": {},
       "architect": {
         "build": {
@@ -133,6 +133,24 @@
             "exclude": [
               "**/node_modules/**"
             ]
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/universal-app-server",
+            "main": "projects/universal-app/src/main.server.ts",
+            "tsConfig": "projects/universal-app/tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/universal-app/src/environments/environment.ts",
+                  "with": "projects/universal-app/src/environments/environment.prod.ts"
+                }
+              ]
+            }
           }
         }
       }

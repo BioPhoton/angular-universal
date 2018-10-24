@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {TalksListComponent} from './talks-list/talks-list.component';
 
-import { TalksOverviewRoutingModule } from './talks-overview-routing.module';
-import { TalksListComponent } from './talks-list/talks-list.component';
+import {TalksOverviewRoutingModule} from './talks-overview-routing.module';
 
 @NgModule({
   imports: [

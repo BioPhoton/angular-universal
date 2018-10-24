@@ -10,8 +10,9 @@ import 'reflect-metadata';
 import 'zone.js/dist/zone-node';
 
 // Consts
+const APP_NAME = 'universal-app';
 const DIST_FOLDER = join(process.cwd(), 'dist');
-const APP_FOLDER = join(DIST_FOLDER, 'angular-universal');
+const APP_FOLDER = join(DIST_FOLDER, 'projects', APP_NAME);
 
 
 // Faster server renders w/ Prod mode (dev mode never needed)
@@ -22,7 +23,7 @@ const app = express();
 
 const PORT = process.env.PORT || 4000;
 // * NOTE :: leave this as require() since this file is built Dynamically from webpack
-const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./angular-universal-server/main');
+const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./universal-app-server/main');
 
 // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
 app.engine('html', ngExpressEngine({
@@ -38,7 +39,7 @@ app.set('views', APP_FOLDER);
 // Example Express Rest API endpoints
 // app.get('/api/**', (req, res) => { });
 // Server static files from /browser
-app.get('*.*', (express as any).static(join(DIST_FOLDER, 'angular-universal'), {
+app.get('*.*', (express as any).static(APP_FOLDER, {
   maxAge: '1y'
 }));
 
@@ -49,7 +50,7 @@ app.get('*.*', (express as any).static(join(DIST_FOLDER, 'angular-universal'), {
 
 
     const file = route !== '/' ? route.split('').slice(1).join('') + '.html' : 'index.html';
-    res.sendFile(join(DIST_FOLDER, 'angular-universal', file));
+    res.sendFile(join(DIST_FOLDER, APP_NAME, file));
   });
 });
 

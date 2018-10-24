@@ -1,7 +1,9 @@
 import {CommonModule, isPlatformServer} from '@angular/common';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {
-  Inject, ModuleWithProviders, NgModule,
+  Inject,
+  ModuleWithProviders,
+  NgModule,
   PLATFORM_ID
 } from '@angular/core';
 import {
@@ -9,11 +11,11 @@ import {
   TranslateModule,
   TranslateService
 } from '@ngx-translate/core';
+import {TranslationManagerService} from '@universal-workspace/translation-manager';
 import {SetLangDirective} from './directives/set-lang.directive';
 import {TranslationManagerConfig} from './interfaces/translation-manager-config.interface';
 import {translateClientFactory} from './loader/translate-client.loader';
 import {translateServerFactory} from './loader/translate-server.loader';
-import {TranslationManagerService} from '@universal-workspace/translation-manager/*';
 
 
 const createTranslateLoader = (http: HttpClient, plateformId: object) => {

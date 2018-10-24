@@ -1,4 +1,4 @@
-import { SpeakerOverviewModule } from './speaker-overview.module';
+import {SpeakerOverviewModule} from './speaker-overview.module';
 
 describe('SpeakerOverviewModule', () => {
   let speakerOverviewModule: SpeakerOverviewModule;

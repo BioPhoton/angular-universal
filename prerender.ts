@@ -8,7 +8,7 @@ import 'reflect-metadata';
 // Load zone.js for the server.
 import 'zone.js/dist/zone-node';
 import {CriticalCssOptions, injectCriticalCss} from './inject-critical-css';
-import {STATIC_ROUTES_FOR_PRERENDER} from './_src/app/app-routing';
+import {STATIC_ROUTES_FOR_PRERENDER} from './projects/universal-app/src/app/app-routing';
 
 
 interface Params {

@@ -1,4 +1,4 @@
-import { TalksOverviewModule } from './talks-overview.module';
+import {TalksOverviewModule} from './talks-overview.module';
 
 describe('TalksOverviewModule', () => {
   let talksOverviewModule: TalksOverviewModule;

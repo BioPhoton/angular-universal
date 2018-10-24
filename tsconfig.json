@@ -20,7 +20,7 @@
       "dom"
     ],
     "paths": {
-      "@universal-workspace/translation-manager/*": [
+      "@universal-workspace/translation-manager": [
         "projects/translation-manager/src/public_api"
       ],
       "@universal-workspace/universal-app/assets/*": [

@@ -2,9 +2,9 @@ import {LocationStrategy} from '@angular/common';
 import {Injectable, OnDestroy} from '@angular/core';
 import {NavigationEnd, Router, RouterEvent, UrlTree} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
+import {TranslationManagerModule} from '@universal-workspace/translation-manager';
 import {Subject} from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
-import {TranslationManagerModule} from '@universal-workspace/translation-manager/*';
 
 @Injectable()
 export class TranslationManagerService implements OnDestroy {
