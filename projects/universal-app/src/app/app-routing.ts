@@ -42,10 +42,3 @@ export const ROUTES: Routes = [
     redirectTo: 'error404'
   }
 ];
-
-export const STATIC_ROUTES_FOR_PRERENDER: string[] = [
-  '/home',
-  '/talks-overview',
-  '/error404'
-];
-

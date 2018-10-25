@@ -8,6 +8,7 @@ import * as express from 'express';
 import {join} from 'path';
 import 'reflect-metadata';
 import 'zone.js/dist/zone-node';
+import {PRERENDER_ROUTES} from './projects/universal-app/src/app/app.prerender-routes';
 
 // Consts
 const APP_NAME = 'universal-app';
@@ -44,8 +45,7 @@ app.get('*.*', (express as any).static(APP_FOLDER, {
 }));
 
 // All regular routes use prerendered content
-// STATIC_ROUTES_FOR_PRERENDER.forEach(route => {
-[].forEach(route => {
+PRERENDER_ROUTES.forEach(route => {
   app.get(route, (req, res) => {
 
 

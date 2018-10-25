@@ -8,8 +8,9 @@ import 'reflect-metadata';
 // Load zone.js for the server.
 import 'zone.js/dist/zone-node';
 import {CriticalCssOptions, injectCriticalCss} from './inject-critical-css';
-import {STATIC_ROUTES_FOR_PRERENDER} from './projects/universal-app/src/app/app-routing';
+import {PRERENDER_ROUTES} from './projects/universal-app/src/app/app.prerender-routes';
 
+global['window'] = {};
 
 interface Params {
   fullPath: string;
@@ -21,11 +22,13 @@ interface Params {
 enableProdMode();
 
 const DIST_FOLDER = join(process.cwd(), 'dist');
+const APP_NAME = 'universal-app';
+const APP_SERVER_NAME = 'universal-app-server';
 
 // * NOTE :: leave this as require() since this file is built Dynamically from webpack
-const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require(join(DIST_FOLDER, 'angular-universal-server', 'main'));
+const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require(join(DIST_FOLDER, APP_SERVER_NAME, 'main'));
 
-const BROWSER_FOLDER = join(process.cwd(), join('dist', 'angular-universal'));
+const BROWSER_FOLDER = join(DIST_FOLDER, APP_NAME);
 
 // Load the index.html file containing references to your application bundle.
 const index = readFileSync(join(BROWSER_FOLDER, 'index.html'), 'utf8');
@@ -38,19 +41,19 @@ const getFilename = (route: string): string => {
 };
 
 // Iterate each route path
-STATIC_ROUTES_FOR_PRERENDER.forEach(route => {
+PRERENDER_ROUTES.forEach(route => {
   const fullPath = join(BROWSER_FOLDER);
 
   // Make sure the directory structure is there
   if (!existsSync(fullPath)) {
     mkdirSync(fullPath);
   }
+
   const resolvedParams = Promise.resolve<Params>({fullPath, route});
 
   // Rendered angular app.
   resolvedParams
-    .then((p) =>
-      renderModuleFactory(AppServerModuleNgFactory, {
+    .then((p) => renderModuleFactory(AppServerModuleNgFactory, {
         document: index as string,
         url: p.route as string,
         extraProviders: [
