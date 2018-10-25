@@ -1,9 +1,10 @@
 import {LocationStrategy} from '@angular/common';
-import {Injectable, OnDestroy} from '@angular/core';
+import {Inject, Injectable, OnDestroy} from '@angular/core';
 import {NavigationEnd, Router, RouterEvent, UrlTree} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {Subject} from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
+import {TRANSLATION_MANAGER_CONFIG_TOKEN} from '../tokens/translatio-manager-config.token';
 
 @Injectable()
 export class TranslationManagerService implements OnDestroy {
@@ -14,7 +15,8 @@ export class TranslationManagerService implements OnDestroy {
   constructor(
     private router: Router,
     private locationStrategy: LocationStrategy,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    @Inject(TRANSLATION_MANAGER_CONFIG_TOKEN) private translationManagerConfig
   ) {
 
     this.router.events
@@ -24,8 +26,8 @@ export class TranslationManagerService implements OnDestroy {
         takeUntil(this.onDestroy$)
       )
       .subscribe((lang: string) => {
-      this.switchLang(lang);
-    });
+        this.switchLang(lang);
+      });
   }
 
   getDefaultLang(): string {
@@ -33,25 +35,36 @@ export class TranslationManagerService implements OnDestroy {
   }
 
   setDefaultLang(lang: string): void {
-    // @TODO validate lang
-    this.translateService.setDefaultLang(lang);
+    if (this.isValidLang(lang)) {
+      this.translateService.setDefaultLang(lang);
+    } else {
+      this.translateService.setDefaultLang(this.translationManagerConfig.defaultLang);
+    }
   }
 
   getExternalUrl(urlTree: UrlTree): string {
-   return this.locationStrategy.prepareExternalUrl(this.router.serializeUrl(urlTree));
-   }
+    return this.locationStrategy.prepareExternalUrl(this.router.serializeUrl(urlTree));
+  }
 
   getExternalUrlWithoutLang(url: string): string {
-   const newCommands = url.split('/');
-   newCommands.shift();
-   newCommands.shift();
-   return newCommands.join('/');
-   }
+    const newCommands = url.split('/');
+    newCommands.shift();
+    newCommands.shift();
+    return newCommands.join('/');
+  }
 
-   switchLang(lang: string) {
-    // @TODO validate lang
-    this.translateService.use(lang);
-   }
+  isValidLang(lang: string): boolean {
+    return this.translationManagerConfig.indexOf(lang) !== -1;
+  }
+
+  switchLang(lang: string) {
+    if (this.isValidLang(lang)) {
+      this.translateService.use(lang);
+    } else {
+      this.translateService.use(this.getDefaultLang());
+    }
+
+  }
 
   ngOnDestroy(): void {
     this.onDestroySubject.next(true);
