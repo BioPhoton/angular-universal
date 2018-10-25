@@ -6,7 +6,7 @@ import {ROUTES} from './app-routing';
 import {AppComponent} from './app.component';
 // Modules
 import {CoreModule} from './core/core.module';
-import {TranslationManagerModule} from '@universal-workspace/translation-manager';
+import {TranslationManagerModule} from '../../../translation-manager/src/public_api';
 // Feature Modules
 import {SpeakerOverviewModule} from './features/speaker-overview/speaker-overview.module';
 import {LayoutModule} from './modules/layout/layout.module';

@@ -15,10 +15,11 @@ import {
 } from '@angular/router';
 import {Observable, Subject} from 'rxjs';
 import {TranslationManagerService} from '../services/translation-manager.service';
-import {takeUntil} from 'rxjs/internal/operators';
+import {filter, takeUntil} from 'rxjs/internal/operators';
 
 
 @Directive({
+  // we need <a> element because of SEO reasons
   selector: 'a[setLang]'
 })
 export class SetLangDirective implements OnChanges, OnDestroy {
@@ -34,15 +35,15 @@ export class SetLangDirective implements OnChanges, OnDestroy {
     private route: ActivatedRoute,
     private translationManagerService: TranslationManagerService
   ) {
-    router.events
+
+    this.router.events
       .pipe(
+        filter((e: RouterEvent): e is NavigationEnd => e instanceof NavigationEnd),
         takeUntil(this.onDestroy$)
       )
-      .subscribe((s: RouterEvent) => {
-      if (s instanceof NavigationEnd) {
+      .subscribe((_) => {
         this.updateTargetUrlAndHref();
-      }
-    });
+      });
   }
 
   @Input()

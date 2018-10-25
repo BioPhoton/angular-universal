@@ -1,6 +1,6 @@
 import {TranslateLoader} from '@ngx-translate/core';
-import TranslationsDe from '@universal-workspace/universal-app/assets/i18n/de.json';
-import TranslationsEn from '@universal-workspace/universal-app/assets/i18n/en.json';
+import TranslationsDe from '../../../../universal-app/src/assets/i18n/de.json';
+import TranslationsEn from '../../../../universal-app/src/assets/i18n/en.json';
 import {Observable, of} from 'rxjs';
 
 const TRANSLATIONS = {

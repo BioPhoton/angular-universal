@@ -33,6 +33,7 @@ export class TranslationManagerService implements OnDestroy {
   }
 
   setDefaultLang(lang: string): void {
+    // @TODO validate lang
     this.translateService.setDefaultLang(lang);
   }
 
@@ -48,6 +49,7 @@ export class TranslationManagerService implements OnDestroy {
    }
 
    switchLang(lang: string) {
+    // @TODO validate lang
     this.translateService.use(lang);
    }
 

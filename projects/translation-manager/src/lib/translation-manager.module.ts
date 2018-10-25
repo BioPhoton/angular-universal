@@ -43,11 +43,6 @@ const TRANSLATE_MODULE_CONFIG = {
 })
 export class TranslationManagerModule {
 
-  static config: TranslationManagerConfig = {
-    languages: ['en'],
-    defaultLang: 'en'
-  };
-
   static forRoot(config: TranslationManagerConfig): ModuleWithProviders {
 
     return {
