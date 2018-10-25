@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "compile:server": "tsc -p tsconfig.server.json",
-    "build:client-and-server-bundles": "ng build --prod && ng run universal-app:server:production",
+    "build:client-and-server-bundles": "ng build --prod --project=universal-app && ng run universal-app:server:production",
     "serve:ssr": "node dist/server",
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
     "generate:prerender": "node dist/prerender",

@@ -48,7 +48,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/projects/universal-app",
+            "outputPath": "dist/universal-app",
             "index": "projects/universal-app/src/index.html",
             "main": "projects/universal-app/src/main.ts",
             "polyfills": "projects/universal-app/src/polyfills.ts",
@@ -138,7 +138,7 @@
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist/projects/universal-app-server",
+            "outputPath": "dist/universal-app-server",
             "main": "projects/universal-app/src/main.server.ts",
             "tsConfig": "projects/universal-app/tsconfig.server.json"
           },

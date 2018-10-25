@@ -12,7 +12,7 @@ import 'zone.js/dist/zone-node';
 // Consts
 const APP_NAME = 'universal-app';
 const DIST_FOLDER = join(process.cwd(), 'dist');
-const APP_FOLDER = join(DIST_FOLDER, 'projects', APP_NAME);
+const APP_FOLDER = join(DIST_FOLDER, APP_NAME);
 
 
 // Faster server renders w/ Prod mode (dev mode never needed)
