@@ -54,7 +54,7 @@ export class TranslationManagerService implements OnDestroy {
   }
 
   isValidLang(lang: string): boolean {
-    return this.translationManagerConfig.indexOf(lang) !== -1;
+    return this.translationManagerConfig.languages.indexOf(lang) !== -1;
   }
 
   switchLang(lang: string) {

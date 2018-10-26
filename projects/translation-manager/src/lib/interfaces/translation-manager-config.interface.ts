@@ -1,4 +1,4 @@
-export interface TranslationManagerConfig {
+export abstract class TranslationManagerConfig {
   languages: string[];
-  defaultLang?: string;
+  defaultLang: string;
 }

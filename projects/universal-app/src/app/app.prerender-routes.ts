@@ -1,5 +1,5 @@
 export const PRERENDER_ROUTES: string[] = [
-  '/home',
-  '/talks-overview',
-  '/error404'
+  'home',
+  'talks-overview',
+  'error404'
 ];
