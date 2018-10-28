@@ -8,7 +8,9 @@ import * as express from 'express';
 import {join} from 'path';
 import 'reflect-metadata';
 import 'zone.js/dist/zone-node';
+import {getFilenameByRoute, getPrerenderedRoutes} from './utils';
 import {PRERENDER_ROUTES} from './projects/universal-app/src/app/app.prerender-routes';
+import {TRANSLATION_CONFIG} from './projects/universal-app/src/app/app.translation-config';
 
 // Consts
 const APP_NAME = 'universal-app';
@@ -45,11 +47,10 @@ app.get('*.*', (express as any).static(APP_FOLDER, {
 }));
 
 // All regular routes use prerendered content
-PRERENDER_ROUTES.forEach(route => {
-  app.get(route, (req, res) => {
-
-
-    const file = route !== '/' ? route.split('').slice(1).join('') + '.html' : 'index.html';
+getPrerenderedRoutes(PRERENDER_ROUTES, TRANSLATION_CONFIG.languages)
+  .forEach(route => {
+  app.get('/' + route, (req, res) => {
+    const file = getFilenameByRoute(route);
     res.sendFile(join(DIST_FOLDER, APP_NAME, file));
   });
 });
