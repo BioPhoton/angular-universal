@@ -14,15 +14,15 @@ import {
   UrlTree
 } from '@angular/router';
 import {Observable, Subject} from 'rxjs';
-import {TranslationManagerService} from '../services/translation-manager.service';
 import {filter, takeUntil} from 'rxjs/internal/operators';
+import {TranslationManagerService} from '../services/translation-manager.service';
 
 
 @Directive({
   // we need <a> element because of SEO reasons
-  selector: 'a[setLang]'
+  selector: 'a[translationLink]'
 })
-export class SetLangDirective implements OnChanges, OnDestroy {
+export class TranslationLinkDirective implements OnChanges, OnDestroy {
   private commands: any[] = [];
   private onDestroySubject: Subject<boolean> = new Subject();
   private onDestroy$: Observable<boolean> = this.onDestroySubject.asObservable();
@@ -47,10 +47,10 @@ export class SetLangDirective implements OnChanges, OnDestroy {
   }
 
   @Input()
-  set setLang(lang: string) {
-    const newCommands: string[] = this.translationManagerService
-      .getExternalUrlWithoutLang(this.translationManagerService.getExternalUrl(this.urlTree)).split('/');
-    const newLang = lang != null ? lang : this.translationManagerService.getDefaultLang();
+  set translationLink(lang: string) {
+    const externalUrl = this.translationManagerService.getExternalUrl(this.urlTree)
+    const newCommands: string[] = this.translationManagerService.getExternalUrlWithoutLang(externalUrl).split('/');
+    const newLang = this.translationManagerService.isValidLang(lang) ? lang : this.translationManagerService.getDefaultLang();
     this.commands = [newLang, ...newCommands];
   }
 
@@ -77,7 +77,7 @@ export class SetLangDirective implements OnChanges, OnDestroy {
   }
 
   private updateTargetUrlAndHref(): void {
-      this.href = this.translationManagerService.getExternalUrl(this.urlTree);
+    this.href = this.translationManagerService.getExternalUrl(this.urlTree);
   }
 
   get urlTree(): UrlTree {
@@ -87,8 +87,8 @@ export class SetLangDirective implements OnChanges, OnDestroy {
     });
   }
 
-}
+  get currentLang(): string {
+    return this.commands[0];
+  }
 
-function attrBoolValue(s: any): boolean {
-  return s === '' || !!s;
 }

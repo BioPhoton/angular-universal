@@ -30,6 +30,10 @@ export class TranslationManagerService implements OnDestroy {
       });
   }
 
+  get currentLang(): string {
+    return this.translateService.currentLang;
+  }
+
   getDefaultLang(): string {
     return this.translateService.getDefaultLang();
   }

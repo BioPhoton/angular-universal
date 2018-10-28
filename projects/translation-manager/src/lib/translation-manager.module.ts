@@ -9,7 +9,8 @@ import {
   TranslateModule,
   TranslateService
 } from '@ngx-translate/core';
-import {SetLangDirective} from './directives/set-lang.directive';
+import {TranslationLinkDirective} from './directives/translation-link.directive';
+import { TranslationLinkActiveDirective } from './directives/translation-link-active.directive';
 import {TranslationManagerConfig} from './interfaces/translation-manager-config.interface';
 import {translateClientFactory} from './loader/translate-client.loader';
 import {translateServerFactory} from './loader/translate-server.loader';
@@ -20,10 +21,6 @@ import {TRANSLATION_MANAGER_CONFIG_TOKEN} from './tokens/translatio-manager-conf
 const createTranslateLoader = (http: HttpClient, plateformId: object) => {
   return isPlatformServer(plateformId) ? translateServerFactory() : translateClientFactory(http);
 };
-
-const DECLARATIONS = [SetLangDirective];
-const EXPORTS = [TranslateModule, ...DECLARATIONS];
-
 const TRANSLATE_MODULE_CONFIG = {
   loader: {
     provide: TranslateLoader,
@@ -31,6 +28,9 @@ const TRANSLATE_MODULE_CONFIG = {
     deps: [HttpClient, PLATFORM_ID]
   }
 };
+
+const DECLARATIONS = [TranslationLinkDirective, TranslationLinkActiveDirective];
+const EXPORTS = [TranslateModule, ...DECLARATIONS];
 
 @NgModule({
   imports: [
