@@ -1,7 +1,7 @@
 import {TranslateLoader} from '@ngx-translate/core';
+import {Observable, of} from 'rxjs';
 import TranslationsDe from '../../../../universal-app/src/assets/i18n/de.json';
 import TranslationsEn from '../../../../universal-app/src/assets/i18n/en.json';
-import {Observable, of} from 'rxjs';
 
 const TRANSLATIONS = {
   en: TranslationsEn,

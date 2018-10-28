@@ -1,16 +1,14 @@
 import {CommonModule, isPlatformServer} from '@angular/common';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {
-  Inject, ModuleWithProviders, NgModule,
+  Inject,
+  ModuleWithProviders,
+  NgModule,
   PLATFORM_ID
 } from '@angular/core';
-import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService
-} from '@ngx-translate/core';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslationLinkActiveDirective} from './directives/translation-link-active.directive';
 import {TranslationLinkDirective} from './directives/translation-link.directive';
-import { TranslationLinkActiveDirective } from './directives/translation-link-active.directive';
 import {TranslationManagerConfig} from './interfaces/translation-manager-config.interface';
 import {translateClientFactory} from './loader/translate-client.loader';
 import {translateServerFactory} from './loader/translate-server.loader';
@@ -65,12 +63,10 @@ export class TranslationManagerModule {
   }
 
   constructor(
-    private translateService: TranslateService,
     private translationManagerService: TranslationManagerService,
     @Inject(TRANSLATION_MANAGER_CONFIG_TOKEN) private translationManagerConfig
   ) {
     this.translationManagerService.setDefaultLang(translationManagerConfig.defaultLang);
-    this.translationManagerService.switchLang(translateService.getBrowserLang());
   }
 
 }
