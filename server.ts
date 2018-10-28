@@ -5,12 +5,14 @@ import {ngExpressEngine} from '@nguniversal/express-engine';
 import {provideModuleMap} from '@nguniversal/module-map-ngfactory-loader';
 
 import * as express from 'express';
+import {existsSync} from 'fs';
 import {join} from 'path';
 import 'reflect-metadata';
 import 'zone.js/dist/zone-node';
-import {getFilenameByRoute, getPrerenderedRoutes} from './utils';
+import {prerenderPageAndSaveAsFile} from './prerender';
 import {PRERENDER_ROUTES} from './projects/universal-app/src/app/app.prerender-routes';
 import {TRANSLATION_CONFIG} from './projects/universal-app/src/app/app.translation-config';
+import {getFilenameByRoute, getPrerenderedRoutes} from './utils';
 
 // Consts
 const APP_NAME = 'universal-app';
@@ -49,11 +51,21 @@ app.get('*.*', (express as any).static(APP_FOLDER, {
 // All regular routes use prerendered content
 getPrerenderedRoutes(PRERENDER_ROUTES, TRANSLATION_CONFIG.languages)
   .forEach(route => {
-  app.get('/' + route, (req, res) => {
-    const file = getFilenameByRoute(route);
-    res.sendFile(join(DIST_FOLDER, APP_NAME, file));
+    app.get('/' + route, (req, res) => {
+      const file = getFilenameByRoute(route);
+      const folderPath = join(DIST_FOLDER, APP_NAME);
+      const fullPath = join(folderPath, file);
+
+      // Check if file exists, if not create it
+      if (!existsSync(fullPath)) {
+        prerenderPageAndSaveAsFile(folderPath, route)
+          .then(() => res.sendFile(fullPath));
+      } else {
+        res.sendFile(fullPath);
+      }
+
+    });
   });
-});
 
 // All regular routes use the Universal engine
 app.get('*', (req, res) => {

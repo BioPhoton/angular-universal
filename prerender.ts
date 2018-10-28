@@ -8,14 +8,12 @@ import 'reflect-metadata';
 // Load zone.js for the server.
 import 'zone.js/dist/zone-node';
 import {CriticalCssOptions, injectCriticalCss} from './inject-critical-css';
-import {getFilenameByRoute, getPrerenderedRoutes} from './utils';
-import {PRERENDER_ROUTES} from './projects/universal-app/src/app/app.prerender-routes';
-import {TRANSLATION_CONFIG} from './projects/universal-app/src/app/app.translation-config';
+import {getFilenameByRoute} from './utils';
 
 global['window'] = {};
 
 interface Params {
-  fullPath: string;
+  folderPath: string;
   route: string;
   html?: string;
   filename?: string;
@@ -35,24 +33,20 @@ const BROWSER_FOLDER = join(DIST_FOLDER, APP_NAME);
 // Load the index.html file containing references to your application bundle.
 const index = readFileSync(join(BROWSER_FOLDER, 'index.html'), 'utf8');
 
-// Iterate each route path
-getPrerenderedRoutes(PRERENDER_ROUTES, TRANSLATION_CONFIG.languages)
-  .forEach(route => {
-  const fullPath = join(BROWSER_FOLDER);
-
+export function prerenderPageAndSaveAsFile(folderPath, route): Promise<any> {
   // Make sure the directory structure is there
-  if (!existsSync(fullPath)) {
-    mkdirSync(fullPath);
+  if (!existsSync(folderPath)) {
+    mkdirSync(folderPath);
   }
 
-  const resolvedParams = Promise.resolve<Params>({fullPath, route});
+  const resolvedParams = Promise.resolve<Params>({folderPath, route});
 
-    resolvedParams
+  return resolvedParams
     .then(renderApp)
     .then(writeToFile)
     .then(injectCriticalCssForFile)
-    .catch(e => console.log('THIS IS AN ERROR', e));
-});
+    .catch(e => console.error('THIS IS AN ERROR', e));
+}
 
 // Rendered angular app
 function renderApp(p) {
@@ -68,7 +62,7 @@ function renderApp(p) {
 // Writes rendered HTML to [name].html, replacing the file if it already exists.
 function writeToFile(p: Params) {
   const filename = getFilenameByRoute(p.route);
-  writeFileSync(join(p.fullPath, filename), p.html);
+  writeFileSync(join(p.folderPath, filename), p.html);
   return {...p, filename};
 }
 
@@ -76,8 +70,8 @@ function writeToFile(p: Params) {
 function injectCriticalCssForFile(p: Params) {
   const opt: CriticalCssOptions = {
     inline: true,
-    base: p.fullPath,
-    src: join(p.fullPath, p.filename),
+    base: p.folderPath,
+    src: join(p.folderPath, p.filename),
     dest: p.filename,
     width: 1300,
     height: 900

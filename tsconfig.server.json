@@ -18,6 +18,7 @@
   },
   "include": [
     "server.ts",
+    "generate-prerendered-routes.ts",
     "prerender.ts",
     "inject-critical-css.ts"
   ]
